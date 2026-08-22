@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Waybill &middot; Logistics Control Tower</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23F5A623'/%3E%3Cpath d='M4 15l4-8 4 8M6 12h4M14 8h6M14 12h6M14 16h4' stroke='%230B1420' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ===================== AUTH SCREEN ===================== -->
+  <div id="auth-screen" class="auth-screen hidden">
+    <div class="auth-backdrop" aria-hidden="true">
+      <svg class="auth-route" viewBox="0 0 600 400" preserveAspectRatio="none">
+        <path d="M -20 340 C 100 340, 120 120, 260 130 S 420 300, 560 60" />
+      </svg>
+    </div>
+
+    <div class="auth-card">
+      <div class="brand">
+        <span class="brand-mark">WB</span>
+        <div>
+          <div class="brand-name">Waybill</div>
+          <div class="brand-sub">Logistics Control Tower</div>
+        </div>
+      </div>
+
+      <div id="auth-login" class="auth-form">
+        <h1>Sign in to dispatch</h1>
+        <p class="auth-hint">Track fleets, shipments and routes in one manifest.</p>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" id="login-email" placeholder="you@company.com" autocomplete="username" />
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input type="password" id="login-password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password" />
+        </label>
+        <button class="btn btn-accent btn-block" id="login-submit">Sign in</button>
+        <p class="auth-switch">New operator? <a href="#" id="show-register">Create an account</a></p>
+        <p class="auth-switch"><a href="#" id="show-settings-from-login">Configure API endpoint</a></p>
+      </div>
+
+      <div id="auth-register" class="auth-form hidden">
+        <h1>Register operator</h1>
+        <p class="auth-hint">Set up access for dispatch, driving or admin duty.</p>
+        <label class="field">
+          <span>Full name</span>
+          <input type="text" id="reg-name" placeholder="Asha Verma" />
+        </label>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" id="reg-email" placeholder="you@company.com" />
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input type="password" id="reg-password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+        </label>
+        <label class="field">
+          <span>Role</span>
+          <select id="reg-role">
+            <option value="admin">Admin</option>
+            <option value="driver">Driver</option>
+            <option value="dispatcher">Dispatcher</option>
+          </select>
+        </label>
+        <button class="btn btn-accent btn-block" id="register-submit">Create account</button>
+        <p class="auth-switch">Already registered? <a href="#" id="show-login">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== APP SHELL ===================== -->
+  <div id="app-shell" class="app-shell hidden">
+
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-mark">WB</span>
+        <div>
+          <div class="brand-name">Waybill</div>
+          <div class="brand-sub">Control Tower</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <a href="#/dashboard" data-route="dashboard"><i data-icon="grid"></i><span>Dashboard</span></a>
+        <a href="#/shipments" data-route="shipments"><i data-icon="box"></i><span>Shipments</span></a>
+        <a href="#/tracking" data-route="tracking"><i data-icon="pin"></i><span>Tracking</span></a>
+        <a href="#/routes" data-route="routes"><i data-icon="route"></i><span>Routes</span></a>
+        <a href="#/vehicles" data-route="vehicles"><i data-icon="truck"></i><span>Vehicles</span></a>
+        <a href="#/drivers" data-route="drivers"><i data-icon="user"></i><span>Drivers</span></a>
+        <a href="#/customers" data-route="customers"><i data-icon="users"></i><span>Customers</span></a>
+        <a href="#/reports" data-route="reports"><i data-icon="chart"></i><span>Reports</span></a>
+      </nav>
+
+      <div class="sidebar-foot">
+        <button class="btn btn-ghost btn-block" id="open-settings"><i data-icon="settings"></i><span>API endpoint</span></button>
+      </div>
+    </aside>
+
+    <div class="main-col">
+      <header class="topbar">
+        <div class="topbar-route">
+          <span id="topbar-title">Dashboard</span>
+          <span class="topbar-crumb" id="topbar-crumb"></span>
+        </div>
+        <div class="topbar-actions">
+          <span class="conn-dot" id="conn-dot" title="Connection status"></span>
+          <div class="user-chip" id="user-chip">
+            <span class="user-role" id="user-role-badge">guest</span>
+            <span class="user-email" id="user-email-label">&mdash;</span>
+          </div>
+          <button class="btn btn-outline btn-sm" id="logout-btn">Sign out</button>
+        </div>
+      </header>
+
+      <main class="content" id="app"></main>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL ROOT ===================== -->
+  <div id="modal-root" class="modal-root hidden">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-box" id="modal-box"></div>
+  </div>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div id="toast-root" class="toast-root"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/pages.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
